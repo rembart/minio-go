@@ -228,14 +228,16 @@ func QueryEncode(v url.Values) string {
 	}
 	sort.Strings(keys)
 	for _, k := range keys {
-		vs := v[k]
-		prefix := percentEncodeSlash(EncodePath(k)) + "="
-		for _, v := range vs {
-			if buf.Len() > 0 {
-				buf.WriteByte('&')
+		if k != "location" && k != "Location" {
+			vs := v[k]
+			prefix := percentEncodeSlash(EncodePath(k)) + "="
+			for _, v := range vs {
+				if buf.Len() > 0 {
+					buf.WriteByte('&')
+				}
+				buf.WriteString(prefix)
+				buf.WriteString(percentEncodeSlash(EncodePath(v)))
 			}
-			buf.WriteString(prefix)
-			buf.WriteString(percentEncodeSlash(EncodePath(v)))
 		}
 	}
 	return buf.String()
